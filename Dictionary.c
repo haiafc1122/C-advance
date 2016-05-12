@@ -28,36 +28,36 @@ int main(int argc ,char *argv[])
     dic=btopn("word.dic",0,1);
     if(dic==NULL)
     {
-        printf("Chưa có dữ liệu ! \n Tự động tạo dữ liệu rỗng !\n");
+        printf("No data! Data automatically generated empty!\n");
         dic=btcrt("word.dic",0,1);
     }
     soundex=btopn("soundex.dic",0,1);
     if(soundex==NULL)
     {
-        printf("Chưa có dữ liệu ! \n Tự động tạo dữ liệu rỗng !\n");
+        printf("No data! Data automatically generated empty!\n");
         soundex=btcrt("soundex.dic",0,1);
     }
     loaddata();
 
     //---------------------------------------------------
-    // case 1: them tu moi
+    // case 1: add new word
 
     if (argc == 3 && strcmp(argv[1],"new") == 0) {
         add_new(dic, soundex, argv[2]);
     }
 
     //----------------------------------------------------
-    // case 2: su tu
+    // case 2: edit meaning
     if (argc == 3 && strcmp(argv[1],"edit")==0){
         edit(dic, soundex, argv[2]);
     }
     //---------------------------------------------------
-    // case xoa tu
+    // case 3: delete word
     if(argc == 3 && strcmp(argv[1],"delete")==0){
         delete_word(dic,soundex,argv[2]);
     }
     //----------------------------------------------------
-    // case tim kiem
+    // case :search word
     if(argc == 3 && strcmp(argv[1],"search")==0){
         seacrch_word(dic,soundex,argv[2]);  
     }
@@ -75,7 +75,7 @@ void insert(BTA *dic,BTA *soundex, char *key, char *data)
 {
     char soundexcode[10];
     int i;
-    //clock_gettime(CLOCK_REALTIME, &start);
+    clock_gettime(CLOCK_REALTIME, &start);
     SoundEx(soundexcode,key,4,1);//chuyen thanh xau soundex
     btins(dic,key,data,strlen(data)+1);//chen vao dic
     i=btins(soundex,key,soundexcode,strlen(key)+1); //chen soundex_word vao soundex
@@ -84,14 +84,14 @@ void insert(BTA *dic,BTA *soundex, char *key, char *data)
     else
         printf("\n Add \"%s\" successful!\n", key);
     insertarray(key);
-    //clock_gettime(CLOCK_REALTIME, &end);
-    //printf("Thoi gian chay :  %u nanoseconds\n", (unsigned int)((end.tv_nsec - start.tv_nsec)));
-    //loaddata(dic);
+    clock_gettime(CLOCK_REALTIME, &end);
+    printf("Running time:  %u nanoseconds\n", (unsigned int)((end.tv_nsec - start.tv_nsec)));
+    loaddata(dic);
 }
 
 void add_new(BTA *dic,BTA *soundex, char* ckey)
 {
-    //loaddata();
+    loaddata();
     system("clear");
     char soundexcode[10],cdata[500],*data,*key, choice;
     int i,rsize;
@@ -205,7 +205,7 @@ void update(BTA *dic,BTA *soundex, char *key, char *data)
 {
     char soundexcode[10];
     int i;
-    //clock_gettime(CLOCK_REALTIME, &start);
+    clock_gettime(CLOCK_REALTIME, &start);
     SoundEx(soundexcode,key,4,1);//chuyen thanh xau soundex
     btupd(dic,key,data,strlen(data)+1);//chen vao dic
     i=btupd(soundex,key,soundexcode,strlen(key)+1); //chen soundex_word vao soundex
@@ -213,8 +213,8 @@ void update(BTA *dic,BTA *soundex, char *key, char *data)
         printf("\nError updating means in soundex!\n");
     else
         printf("\nUpdate \"%s\" successful! !!!\n", key);
-    //clock_gettime(CLOCK_REALTIME, &end);
-    //printf("Thá»i gian cháº¡y : %u nanoseconds\n", (unsigned int)((end.tv_sec - end.tv_sec) * 1000000000 + (end.tv_nsec - start.tv_nsec)))
+    clock_gettime(CLOCK_REALTIME, &end);
+    printf("Running time: %u nanoseconds\n", (unsigned int)((end.tv_sec - end.tv_sec) * 1000000000 + (end.tv_nsec - start.tv_nsec)));
 }
 //---------------------------------------------------------------------------------------------------------------
 void edit(BTA *dic,BTA *soundex, char *key)
@@ -225,7 +225,6 @@ void edit(BTA *dic,BTA *soundex, char *key)
     do
     {
         updatemenu();
-        rl_attempted_completion_function = my_completion;
         if(bfndky(dic,key,&rsize)!=0)
             {
                 printf("\n \"%s\" not in the dictionary of Natural \n press any key to add the word \"%s\" or press ESC for exit:", key,key);
@@ -309,7 +308,7 @@ void delete(BTA *dic,BTA *soundex, char *key)
 {
     char soundexcode[100];
     int i;
-    //clock_gettime(CLOCK_REALTIME, &start);
+    clock_gettime(CLOCK_REALTIME, &start);
     SoundEx(soundexcode,key,4,1);//chuyen thanh xau soundex
     btdel(dic,key);//chen vao dic
     i=btdel(soundex,key); //chen soundex_word vao soundex
@@ -317,10 +316,10 @@ void delete(BTA *dic,BTA *soundex, char *key)
         printf("\nError updating means in soundex!\n");
     else
         printf("\n Delete \"%s\" successful!\n", key);
-    deletearray(key);
-    //clock_gettime(CLOCK_REALTIME, &end);
-    //printf("Thoi gian chay :  %u nanoseconds\n", (unsigned int)((end.tv_nsec - start.tv_nsec)));
-    //loaddata(dic);
+    //deletearray(key);
+    clock_gettime(CLOCK_REALTIME, &end);
+    printf("Running time:  %u nanoseconds\n", (unsigned int)((end.tv_nsec - start.tv_nsec)));
+    loaddata(dic);
 }
 
 void delete_word(BTA *dic,BTA *soundex,char *key)
@@ -328,31 +327,13 @@ void delete_word(BTA *dic,BTA *soundex,char *key)
     system("clear");
     char soundexcode[100],ckey[200],cdata[500],*data, ch, choice;
     int i,rsize;
-    do
-    {
         deletemenu();
-        if(bfndky(dic,key,&rsize)!=0)
-        {
-            printf("\n\"%s\" not in this dictionary!\n\nPress any key for delete any word again or press Esc for exit : ", key);
-            scanf("%c", &choice);
-            while(getchar()!='\n');
-            if(choice!=27)
-                continue;
-            else
-                break;
-        }
-        else
-            delete(dic, soundex, key);
-
-        printf("\n(Press any key for input to delete again or press Esc for exit: ");
-        scanf("%c", &choice);
-        while(getchar()!='\n');
-        if(choice!=27)
-            continue;
-        else
-            break;
-    }while(1);
-    system("clear");
+    if(bfndky(dic,key,&rsize)!=0)
+    {
+        printf("\n\"%s\" not in this dictionary!\n\n", key);
+    }
+    else 
+        delete(dic, soundex, key);
 }
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -369,81 +350,36 @@ void seacrch_word(BTA *dic, BTA *soundex,char *key)
     char soundexcode[100],ckey[200],cdata[500],*data, ch, choice,*soundextemp[20];
     char soundexcodesearch[20],soundexkey[81];
     int i,j,rsize,size;
-    do
+    searchmenu();
+    i = 0;
+    if(btsel(dic,key,cdata,100, &rsize) !=0)
     {
-        searchmenu();
-        back_search_2: ;
-        i = 0;
-        rl_attempted_completion_function = my_completion;
-        // key = readline("\tNhập từ cần tìm : ");
+        printf("\n\"%s\" not in this dictionary\nBelow the same  \"%s\": \n\n", key,key);
+        SoundEx(soundexcodesearch,key, 4,1);
+        btpos(soundex,1);
+        while ( btseln(soundex, soundexkey, soundexcode,200, &size)==0)
+        {
+            if((strcmp(soundexcodesearch,soundexcode)==0) && (strcmp(soundexkey,key)!=0))
+            {
+                printf("%s\t",soundexkey);
+                soundextemp[i] = (char*) malloc(200);
+                strcpy(soundextemp[i],soundexkey);
+                i++;
+            }
+        }
+        printf("\n");
 
-        trim(key);
-        if((key[0]=='\0'))
+        if(i==0)
         {
-            printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\tNhập thiếu dữ liệu!\n\nNhấn phím bất kỳ để nhập lại hoặc nhấn ESC để về menu chính: ");
-            scanf("%c", &choice);
-            while(getchar()!='\n');
-            if(choice!=27)
-            {
-                system("clear");
-                continue;
-            }
-            else
-                break;
+            printf("\nNot any word same \"%s\" in this dictionary !\n",key);
+            
         }
-        else
-        {
-            if(btsel(dic,key,cdata,100, &rsize) !=0)
-            {
-                printf("\n\tTừ \"%s\" không có trong từ điển này !\n\n   Dưới đây là các từ gần giống với \"%s\": \n\n", key,key);
-                SoundEx(soundexcodesearch,key, 4,1);
-                btpos(soundex,1);
-                while ( btseln(soundex, soundexkey, soundexcode,200, &size)==0)
-                {
-                    if((strcmp(soundexcodesearch,soundexcode)==0) && (strcmp(soundexkey,key)!=0))
-                    {
-                        printf("%s\t",soundexkey);
-                        soundextemp[i] = (char*) malloc(200);
-                        strcpy(soundextemp[i],soundexkey);
-                        i++;
-                        //if (i%5==0)
-                            //printf("\n");
-                    }
-                }
-                if(i==0)
-                {
-                    printf("\n\n\n\n\n\n\n\n\n\nKhông có từ nào giống với \"%s\" trong từ điển này !\n",key);
-                    printf("\n(Nhấn phím bất kỳ để tiếp tục tìm từ khác hoặc nhấn ESC để quay lại menu chính): ");
-                    scanf("%c", &choice);
-                    while(getchar()!='\n');
-                    if(choice!=27)
-                    {
-                        system("clear");
-                        continue;
-                    }
-                    else
-                        break;
-                }
-                else
-                {
-                    printf("\n\n");
-                    goto back_search_2;
-                }
-            }
-            else
-            {
-                printf("\n\t\"%s\" : \n\n      ---> %s\n", key, cdata);
-                printf("\n\n\n\n\n\n\n\n\n\n\n\tTìm thấy từ \"%s\" trong từ điển \n\n(Nhấn phím bất kỳ để tiếp tục thêm từ mới khác hoặc nhấn ESC để về menu chính): ",key);
-                scanf("%c", &choice);
-                while(getchar()!='\n');
-                if(choice!=27)
-                    system("clear");
-                else
-                    break;
-            }
-        }
-        free(key);
-    }while(1);
-    system("clear");
+
+    }
+    else
+    {
+        printf("\n\"%s\" ---> %s\n", key, cdata);
+        printf("\n Found \"%s\" in this dictionary \n",key);
+    }
 }
 

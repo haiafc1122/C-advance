@@ -1,97 +1,48 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "jrb.c"
-#include "jrb.h"
-#include "jval.c"
-#include "jval.h"
-#include "fields.h"
+#include <string.h>
 #include <time.h>
 #include "bt.h"
 #include "btree.h"
-//timer_t start,end;
-//struct timespec ts, start, end;
-
-// void randomString(int size, char* output)
-// {
-//     char bangchucai[] = "abcdefghijklmnopqrstuvwxyz";
-//     size = rand()%size +3;
-//     int i;
-//     for (i = 0; i < size; ++i)
-//         output[i] = bangchucai[rand() % (sizeof(bangchucai) - 1)];
-//     output[size] = 0;
-// }
+time_t start,end;
 main()
 {
-    //start = time(NULL);
-    FILE *p,*q,*r,*f1,*f2,*f3;
+    start = time(NULL);
+    FILE *p,*q,*r,*f4,*f1,*f2,*f3;
     int i,n;
-    JRB a,b,c;
-    a = make_jrb();
-    char ch[100];
- //    printf("Nhap so tu: ");
- //    scanf("%d", &n);
- //    while(getchar()!='\n');
- //    q = fopen("file1.txt", "wt");
- //    p = fopen("file2.txt", "wt");
- //    //fputs("//Nghia Tieng Viet\n", p);
- //    //fputs("//Tu Tieng Anh\n", q);
- //    //clock_gettime(CLOCK_REALTIME, &start);
-	// for (i=0; i<n; i++)
- //    {
- //        randomString(100, ch);
- //        c = jrb_find_str(a, ch);
- //        if(c == NULL)
- //        {
- //            fputs(ch,p);
- //            fputs("\n",p);
- //            jrb_insert_str(a,strdup(ch) ,new_jval_i(NULL));
- //        }
- //        else
- //            i--;
- //    }
- //    jrb_traverse(b,a)
- //    {
- //        fputs(jval_s(b->key),q);
- //        fputs("\n",q);
- //    }
- //    fclose(q);
- //    fclose(p);
-
-
-    char ta[20],tv[40], x[50];
-    f1 = fopen("file11.txt","rt");
-    f2 = fopen("file22.txt","rt");
-    f3 = fopen("sample1.dic","wt");
-    fprintf(f3,"%s","[");
-    fprintf(f3, "%s","\n");
-    while((!feof(f1)))
+    char ta[200],tv[500], x[500],t1;
+    char c;
+    printf("Nhập nguồn từ điển: ");
+    scanf("%s", &t1);
+    //while(getchar()!='\n');
+    //printf("Đang trong quá trình nạp dữ liệu từ điển !nVui lòng chờ trong giây lát !");
+    f4 = fopen(&t1,"rt");
+    f3 = fopen("AnhViet11.dic","wt");
+    fgets(x, 500,f4); // quet dong dau
+    while(1)
     {
-        fscanf(f1,"%s\n",ta);
-        fprintf(f3,"%s","{");
-        fprintf(f3,"%s",ta);
-        fprintf(f3,"%s","}");
-        fprintf(f3,"%s",":");
-        fscanf(f2,"%s\n",tv);
-        fprintf(f3,"%s","{");
-        fprintf(f3,"%s",tv);
-        fprintf(f3,"%s","}");
-        if((!feof(f1)))
-            fputs(",\n", f3);
+        c = fgetc(f4);
+        if(c == ']')
+            break;
+        if(c == '/')
+            fgets(x,500,f4); // gap // thi bo qua dong do
+        if(c == '{')
+        {
+            fscanf(f4,"%[^}]}:{%[^}]}",ta,tv);
+            fprintf(f3,"%s","@");
+            fprintf(f3,"%s\n",ta);
+            fprintf(f3,"%s\n",tv);
+            c = fgetc(f4);
+            if(c != ',')
+                break;
+        }
     }
-    fprintf(f3, "%s","\n");
-    fprintf(f3,"%s","]");
-    fclose(f1);
-    fclose(f2);
+    fclose(f4);
     fclose(f3);
-   // clock_gettime(CLOCK_REALTIME, &end);
-    //printf("time for this algorithm = %u nanoseconds\n", (unsigned int)((end.tv_sec - end.tv_sec) * 1000000000 + (end.tv_nsec - start.tv_nsec)));
-    //end = time(NULL);
-    //printf("Thoi gian chay: %f giay", difftime(end,start));
-
-    /*btinit();
-    FILE *f = fopen("AnhViet.Dic","r");
-    char key[40], w[50], s[50];
+    btinit();
+    FILE *f = fopen("AnhViet.dic","r");
+    char key[200], w[500], s[500];
     char d;
     BTA *b1, *b2;
     b1 = btcrt("word.dic", 0, 0);
@@ -109,19 +60,14 @@ main()
         //printf("%s\n",data);
         btins(b1, key, data, strlen(data)+1);
         SoundEx(w, key, 4, 1);
-        btins(b2, key, w, strlen(w)+1);
+        btins(b2, key, w, strlen(key)+1);
     }
     btcls(b1);
     btcls(b2);
-    return 0;*/
+    end = time(NULL);
+    //printf("Thoi gian chay: %f giay", difftime(end,start));
+    return 0;
 }
-
-
-
-
-
-
-
 //ham soundex
  int SoundEx(char *SoundEx, char *WordString, int   LengthOption, int   CensusOption)
 {

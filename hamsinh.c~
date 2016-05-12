@@ -10,17 +10,17 @@
 #include "bt.h"
 #include "btree.h"
 //timer_t start,end;
-//struct timespec ts, start, end;
+struct timespec ts, start, end;
 
-// void randomString(int size, char* output)
-// {
-//     char bangchucai[] = "abcdefghijklmnopqrstuvwxyz";
-//     size = rand()%size +3;
-//     int i;
-//     for (i = 0; i < size; ++i)
-//         output[i] = bangchucai[rand() % (sizeof(bangchucai) - 1)];
-//     output[size] = 0;
-// }
+void randomString(int size, char* output)
+{
+    char bangchucai[] = "abcdefghijklmnopqrstuvwxyz";
+    size = rand()%size +3;
+    int i;
+    for (i = 0; i < size; ++i)
+        output[i] = bangchucai[rand() % (sizeof(bangchucai) - 1)];
+    output[size] = 0;
+}
 main()
 {
     //start = time(NULL);
@@ -29,34 +29,34 @@ main()
     JRB a,b,c;
     a = make_jrb();
     char ch[100];
- //    printf("Nhap so tu: ");
- //    scanf("%d", &n);
- //    while(getchar()!='\n');
- //    q = fopen("file1.txt", "wt");
- //    p = fopen("file2.txt", "wt");
- //    //fputs("//Nghia Tieng Viet\n", p);
- //    //fputs("//Tu Tieng Anh\n", q);
- //    //clock_gettime(CLOCK_REALTIME, &start);
-	// for (i=0; i<n; i++)
- //    {
- //        randomString(100, ch);
- //        c = jrb_find_str(a, ch);
- //        if(c == NULL)
- //        {
- //            fputs(ch,p);
- //            fputs("\n",p);
- //            jrb_insert_str(a,strdup(ch) ,new_jval_i(NULL));
- //        }
- //        else
- //            i--;
- //    }
- //    jrb_traverse(b,a)
- //    {
- //        fputs(jval_s(b->key),q);
- //        fputs("\n",q);
- //    }
- //    fclose(q);
- //    fclose(p);
+    printf("Nhap so tu: ");
+    scanf("%d", &n);
+    while(getchar()!='\n');
+    q = fopen("file1.txt", "wt");
+    p = fopen("file2.txt", "wt");
+    //fputs("//Nghia Tieng Viet\n", p);
+    //fputs("//Tu Tieng Anh\n", q);
+    //clock_gettime(CLOCK_REALTIME, &start);
+	for (i=0; i<n; i++)
+    {
+        randomString(100, ch);
+        c = jrb_find_str(a, ch);
+        if(c == NULL)
+        {
+            fputs(ch,p);
+            fputs("\n",p);
+            jrb_insert_str(a,strdup(ch) ,new_jval_i(NULL));
+        }
+        else
+            i--;
+    }
+    jrb_traverse(b,a)
+    {
+        fputs(jval_s(b->key),q);
+        fputs("\n",q);
+    }
+    fclose(q);
+    fclose(p);
 
 
     char ta[20],tv[40], x[50];
